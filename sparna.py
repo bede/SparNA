@@ -42,10 +42,8 @@ from Bio import SeqUtils
 import plotly.offline as py
 import plotly.graph_objs as go
 
-
-logging.basicConfig(level=logging.ERROR)
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-
 
 def run(cmd):
     return subprocess.run(cmd,
@@ -229,7 +227,8 @@ def map_to_assemblies(asms_paths, params):
         ' | samtools sort - -o {out}/remap/{asm}.uniq.bam',
         'samtools index {out}/remap/{asm}.uniq.bam',
         'samtools idxstats {out}/remap/{asm}.uniq.bam'
-        ' > {out}/remap/{asm}.uniq.bam.stats']
+        ' > {out}/remap/{asm}.uniq.bam.stats',
+        'rm {out}/remap/{asm}.sam {out}/remap/{asm}.uniq.sam']
         cmds = [cmd.format(**cmd_vars) for cmd in cmds]
         for cmd in cmds:
             logger.info(cmd)
@@ -309,7 +308,7 @@ def fasta_onecodex_lca_taxa(fasta_path, onecodex_api_key):
                 data = future.result()
             except Exception as exception:
                 taxa[seqrecord.id] = (None, None, None)
-                logger.info('Skipping '.format(seqrecord.id))
+                logger.info('Skipping {}'.format(seqrecord.id))
             else:
                 taxa[seqrecord.id] = future.result()
     return taxa
@@ -585,7 +584,7 @@ def plotly(asms_names, asms_stats, lca, blast, params):
                 go.Scatter(
                     x=asms_stats['lens'][asm_name],
                     y=asms_stats['gc'][asm_name],
-                    mode='lines+markers',
+                    mode='markers',
                     name=asm_name,
                     text=asms_stats['legend'][asm_name],
                     line=dict(shape='spline'),
@@ -601,7 +600,7 @@ def plotly(asms_names, asms_stats, lca, blast, params):
                 go.Scatter(
                     x=asms_stats['lens'][asm_name],
                     y=asms_stats['gc'][asm_name],
-                    mode='lines+markers',
+                    mode='markers',
                     name=asm_name,
                     text=asms_stats['blast_summary'][asm_name],
                     line=dict(shape='spline'),
@@ -617,7 +616,7 @@ def plotly(asms_names, asms_stats, lca, blast, params):
                 go.Scatter(
                     x=asms_stats['lens'][asm_name],
                     y=asms_stats['gc'][asm_name],
-                    mode='lines+markers',
+                    mode='markers',
                     name=asm_name,
                     text=asms_stats['names'][asm_name],
                     line=dict(shape='spline'),
@@ -658,6 +657,7 @@ def report(chart_url, start_time, end_time, params):
 
 
 def main(
+    debug=False,
     fwd_fq=None, rev_fq=None,
     qual_trim=False,
     lca=False, blast=False,

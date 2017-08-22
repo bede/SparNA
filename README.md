@@ -1,10 +1,10 @@
 # sparNA  
 
-sparNA is a pipeline for assembling high depth paired-end Illumina reads from populations of viruses such as HIV and HCV. *In silico* normalisation can improve the contiguity of such assemblies, but should be parameterised on a per-sample basis for best results. sparNA accepts paired Illumina reads and lists of normalisation target coverage `c` and normalisation `k` values. Adapter sequences are trimmed with trimmomatuc and optionally quality trimmed with the `--qual-trim` flag, and then normalised in parallel using Khmer's `normalize-by-median.py` according to each combination of `c` and `k`, and each set of reads is subsequently assembled with SPAdes. Assemblies are annotated using either k-mer based LCA or BLAST and are subsequently plotted alonside one another for comparison. Due to the overheads of the BLAST, the `--lca` flag which uses the OneCodex realtime API is recommended.
-  
-![Plot example](./plot.png)  
-  
-Feel free to get in touch via `b at bede dot im` or [Twitter](https://twitter.com/beconstant) 
+🔔 **Deprecated - please see [Venorm](https://github.com/bede/venorm)** 🔔
+
+sparNA is a pipeline for assembling high depth paired-end Illumina reads from populations of viruses such as HIV and HCV. *In silico* normalisation can improve the contiguity of such assemblies, but should be parameterised on a per-sample basis for best results. sparNA accepts paired Illumina reads and lists of normalisation target coverage `c` and normalisation `k` values. Adapter sequences are trimmed with trimmomatuc and optionally quality trimmed with the `--qual-trim` flag, and then normalised in parallel using Khmer's `normalize-by-median.py` according to each combination of `c` and `k`, and each set of reads is subsequently assembled with SPAdes. Assemblies are annotated using either k-mer based LCA or BLAST and are subsequently plotted alonside one another for comparison. Due to the overheads of the BLAST, the `--lca` flag which uses the One Codex realtime API is recommended.
+
+
 
 ## Dependencies  
 Tested on OS X. I'm informed it also runs on Ubuntu with dependencies installed via `apt-get` and Linuxbrew  
@@ -22,7 +22,7 @@ Unzip `sparna.py` and the `res/` directory
 Ensure dependencies are discoverable inside $PATH  
 N.B. Specify reads using absolute paths  
 Having issues? Set log level to `INFO` for verbose output and send me an email  
-  
+
 ```
 $ ./sparna.py help
 usage: sparna.py [-h] [-f FWD_FQ] [-r REV_FQ] [-q] [--blast] [-l]
@@ -63,13 +63,13 @@ optional arguments:
 
 Run sparNA without quality trimming (just adapter trimming) and using default SPAdes k-mers  
 ```
-./sparna.py --lca --fwd-fq /Users/Bede/oxgl/1.f.fastq --rev-fq /Users/Bede/oxgl/1.r.fastq --norm-c-list 1,5,20,100 --norm-k-list 21,25,31 --out-prefix 1_no_qtrim-norm_c1c5c10c20c100k21k25k31 --threads 6 \
+./sparna.py --lca --fwd-fq /Users/Bede/oxgl/1.f.fastq --rev-fq /Users/Bede/oxgl/1.r.fastq --norm-c-list 1,5,20,100 --norm-k-list 21,25,31 --out-prefix 1_no_qtrim-norm_c1c5c10c20c100k21k25k31 --threads 6  
 ```
-  
+
 Run sparNA with PHRED Q20 sliding window 3' trimming and using default SPAdes k-mers and additionally perform assembly without prior normalisation  
 
 ```
-./sparna.py --lca --qual-trim --no-norm--fwd-fq /Users/Bede/oxgl/1.f.fastq --rev-fq /Users/Bede/oxgl/1.r.fastq --norm-c-list 1,5,20,100 --norm-k-list 21,25,31 --out-prefix 1_qtrim-norm_c0c1c5c10c20c100k0k21k25k31
+./sparna.py --lca --qual-trim --no-norm--fwd-fq /Users/Bede/oxgl/1.f.fastq --rev-fq /Users/Bede/oxgl/1.r.fastq --norm-c-list 1,5,20,100 --norm-k-list 21,25,31 --out-prefix 1_qtrim-norm_c0c1c5c10c20c100k0k21k25k31  
 ```
 
 Sample run:
